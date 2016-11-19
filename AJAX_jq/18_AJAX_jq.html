@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Jquery-AJAX</title>
+	<script src="jquery-3.1.0.js"></script>
+</head>
+<style>
+body,h1,input,button,p{
+	font-size:20px;
+}
+</style>
+<body>
+	<h1>员工查询</h1>
+	<lable>请输入员工编号 ：</lable>
+	<input type="text" id="keyword" />
+	<button id="search">查询</button>
+	<p id="searchResult"></p>
+
+	<h1>员工创建</h1>
+	<lable>请输入员工姓名：</lable>
+	<input type="text" id="staffName"/> <br>
+	<lable>请输入员工编号：</lable>
+	<input type="text" id="staffNumber"/> <br>
+	<lable>请输入员工性别：</lable>
+	<select id="staffSex">
+		<option>男</option>
+		<option>女</option>
+	</select> <br>
+	<lable>请输入员工职位：</lable>
+	<input type="text" id="staffJob"/>
+	<button id="save">保存</button>
+	<p id="saveResult"></p>
+
+	<script>
+		$(document).ready(function() {
+			$('#search').click(function() {
+				$.ajax({
+					type: 'GET',
+					url: '../JSON/json_server.php?number= ' + $('#keyword').val(),
+					datatype: 'json',
+					success: function(rtData) {
+						if (rtData.success) {
+							$('#searchResult').html(rtData.msg);
+						} else {
+							$('#searchResult').html('错误信息：' + rtData.msg);
+						}
+					},
+					error: function(jqXHR) {
+						alert('发生错误' +jqXHR.status);
+
+					}
+				});
+			});
+
+			$('#save').click(function() {
+				$.ajax({
+					type: "POST",
+					url: '../JSON/json_server.php',
+					data: {
+						name: $('#staffName').val(),
+						number: $('#staffNumber').val(),
+						sex: $('#staffSex').val(),
+						job: $('#staffJob').val()
+					},
+					dataType: 'json',
+					success: function(rtData) {
+						if (rtData.success) {
+							$('#saveResult').html(rtData.msg);
+						} else {
+							$('#saveResult').html('错误信息：' + rtData.msg);
+						}
+					},
+					error: function(jqXHR) {
+						alert('发生错误' + jqXHR.status);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ajax</title>
+</head>
+<style>
+body,h1,input,button,p{
+	font-size:20px;
+}
+</style>
+<body>
+	<h1>员工查询</h1>
+	<lable>请输入员工编号 ：</lable>
+	<input type="text" id="keyword" />
+	<button id="search">查询</button>
+	<p id="searchResult"></p>
+
+	<h1>员工创建</h1>
+	<lable>请输入员工姓名：</lable>
+	<input type="text" id="stuffName"/> <br>
+	<lable>请输入员工编号：</lable>
+	<input type="text" id="stuffNumber"/> <br>
+	<lable>请输入员工性别：</lable>
+	<select id="stuffSex">
+		<option>男</option>
+		<option>女</option>
+	</select> <br>
+	<lable>请输入员工职位：</lable>
+	<input type="text" id="stuffJob"/>
+	<button id="save">保存</button>
+	<p id="saveResult"></p>
+
+	<script>
+		document.getElementById('search').onclick = function() {
+			var sn = document.getElementById('keyword').value;
+			var request = new XMLHttpRequest(); //建立Ajax对象
+			request.open("GET", "server.php?number= "+ sn, true); //设置请求信息
+			request.send(); //提交请求
+			request.onreadystatechange = function() {
+				//如果响应完成
+				if (request.readyState == 4) { 
+					//如果请求成功
+					if(request.status == 200) {
+						document.getElementById('searchResult').innerHTML = request.responseText;
+					} else {
+						alert('发生错误' +request.status);
+					}
+				}
+			}
+		};
+
+		document.getElementById('save').onclick = function() {
+			var request = new XMLHttpRequest();
+			request.open("POST", "server.php", true);
+			var data = 'name=' + document.getElementById('stuffName').value 
+						+ '&number=' + document.getElementById('stuffNumber').value
+						+ '&sex=' + document.getElementById('stuffSex').value
+						+ '&job=' + document.getElementById('stuffJob').value;
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			request.send(data);
+			request.onreadystatechange = function() {
+				if(request.readyState == 4) {
+					if(request.status == 200) {
+						//如果响应完成且请求成功
+						document.getElementById('saveResult').innerHTML = request.responseText;
+					} else {
+						alert('发生错误：' + request.status);
+					}
+				}
+			}
+		}
+
+
+	</script>
+</body>
+</html>
